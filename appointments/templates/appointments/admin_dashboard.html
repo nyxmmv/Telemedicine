@@ -1,0 +1,65 @@
+{% extends 'appointments/base.html' %}
+
+{% block content %}
+<div class="dashboard">
+    <h1>Admin Dashboard</h1>
+    <p>Welcome back. Here's an overview of the system.</p>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h2>{{ total_doctors }}</h2>
+            <p>Total Doctors</p>
+        </div>
+        <div class="stat-card">
+            <h2>{{ total_users }}</h2>
+            <p>Registered Users</p>
+        </div>
+        <div class="stat-card">
+            <h2>{{ total_appointments }}</h2>
+            <p>Total Appointments</p>
+        </div>
+        <div class="stat-card stat-pending">
+            <h2>{{ pending_count }}</h2>
+            <p>Pending</p>
+        </div>
+        <div class="stat-card stat-confirmed">
+            <h2>{{ confirmed_count }}</h2>
+            <p>Confirmed</p>
+        </div>
+        <div class="stat-card stat-cancelled">
+            <h2>{{ cancelled_count }}</h2>
+            <p>Cancelled</p>
+        </div>
+    </div>
+
+    <div class="dashboard-links">
+        <a href="{% url 'admin_doctor_list' %}" class="dashboard-link">Manage Doctors</a>
+        <a href="{% url 'admin_appointment_list' %}" class="dashboard-link">All Appointments</a>
+        <a href="{% url 'admin_user_list' %}" class="dashboard-link">Manage Users</a>
+    </div>
+
+    {% if recent_appointments %}
+    <h2 class="section-title">Recent Appointments</h2>
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Patient</th>
+                <th>Doctor</th>
+                <th>Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for appt in recent_appointments %}
+            <tr>
+                <td>{{ appt.patient.username }}</td>
+                <td>{{ appt.doctor.name }}</td>
+                <td>{{ appt.date }}</td>
+                <td><span class="badge badge-{{ appt.status }}">{{ appt.get_status_display }}</span></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+{% endblock %}

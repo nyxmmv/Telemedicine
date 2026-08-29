@@ -1,0 +1,28 @@
+{% extends 'appointments/base.html' %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Remove Doctor</h2>
+    <p>Are you sure you want to remove this doctor? This cannot be undone.</p>
+</div>
+
+<div class="appointment-card">
+    <div class="appointment-header">
+        <h3>{{ doctor.name }}</h3>
+        <span class="specialisation">{{ doctor.specialisation }}</span>
+    </div>
+    <div class="appointment-details">
+        <p><strong>Email:</strong> {{ doctor.email }}</p>
+        <p><strong>Phone:</strong> {{ doctor.phone }}</p>
+        <p><strong>Available:</strong> {{ doctor.available|yesno:"Yes,No" }}</p>
+    </div>
+</div>
+
+<div class="confirm-actions">
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn-cancel">Yes, Remove Doctor</button>
+        <a href="{% url 'admin_doctor_list' %}" class="btn-back">No, Go Back</a>
+    </form>
+</div>
+{% endblock %}

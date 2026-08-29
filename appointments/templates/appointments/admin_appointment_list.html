@@ -1,0 +1,88 @@
+{% extends 'appointments/base.html' %}
+
+{% block content %}
+<div class="dashboard">
+    <!-- Search / filter bar -->
+    <div class="filter-bar">
+        <form method="get" class="filter-form">
+            <input type="text" name="q" value="{{ q }}" placeholder="Search patient or doctor…" class="filter-input">
+            <select name="status" class="filter-select">
+                <option value="">All Statuses</option>
+                <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+                <option value="confirmed" {% if status_filter == 'confirmed' %}selected{% endif %}>Confirmed</option>
+                <option value="cancelled" {% if status_filter == 'cancelled' %}selected{% endif %}>Cancelled</option>
+            </select>
+            <input type="date" name="date" value="{{ date_filter }}" class="filter-input filter-date">
+            <button type="submit" class="btn btn-primary">Filter</button>
+            <a href="{% url 'admin_appointment_list' %}" class="btn btn-secondary">Clear</a>
+        </form>
+    </div>
+
+    <div class="admin-list-header">
+        <div>
+            <h1>All Appointments</h1>
+            <a href="{% url 'admin_dashboard' %}" class="back-link">&larr; Back to Dashboard</a>
+        </div>
+    </div>
+
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Patient</th>
+                <th>Doctor</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Reason</th>
+                <th>Booked At</th>
+                <th>Status</th>
+                <th colspan="2">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for appt in appointments %}
+            <tr>
+                <td>{{ appt.patient.username }}</td>
+                <td>{{ appt.doctor.name }}</td>
+                <td>{{ appt.date }}</td>
+                <td>{{ appt.time }}</td>
+                <td>{{ appt.reason }}</td>
+                <td>{{ appt.booked_at|date:"d M Y" }}</td>
+                <td><span class="badge badge-{{ appt.status }}">{{ appt.get_status_display }}</span></td>
+                <td>
+                    <!-- Quick status update -->
+                    <form method="post" action="{% url 'admin_update_appointment_status' appt.id %}" class="inline-form">
+                        {% csrf_token %}
+                        <select name="status" class="status-select">
+                            <option value="pending" {% if appt.status == 'pending' %}selected{% endif %}>Pending</option>
+                            <option value="confirmed" {% if appt.status == 'confirmed' %}selected{% endif %}>Confirmed</option>
+                            <option value="cancelled" {% if appt.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                        </select>
+                        <button type="submit" class="btn-edit-inline">Save</button>
+                    </form>
+                </td>
+                <td>
+                    <a href="{% url 'delete_appointment' appt.id %}" class="btn-delete-inline">Delete</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="9">No appointments found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    {% if appointments.has_other_pages %}
+    <div class="pagination">
+        {% if appointments.has_previous %}
+            <a href="?page={{ appointments.previous_page_number }}&q={{ q }}&status={{ status_filter }}&date={{ date_filter }}">&laquo; Prev</a>
+        {% endif %}
+        <span>Page {{ appointments.number }} of {{ appointments.paginator.num_pages }}</span>
+        {% if appointments.has_next %}
+            <a href="?page={{ appointments.next_page_number }}&q={{ q }}&status={{ status_filter }}&date={{ date_filter }}">Next &raquo;</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'appointments/base.html' %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Add New Doctor</h2>
+    <p>Fill in the details below to register a new doctor.</p>
+</div>
+
+<div class="form-container">
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+                <p class="field-error">{{ field.errors|join:", " }}</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary" style="width:100%; padding: 0.7rem;">Add Doctor</button>
+    </form>
+    <p><a href="{% url 'admin_doctor_list' %}">&larr; Back to Doctor List</a></p>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'appointments/base.html' %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Edit Doctor — {{ doctor.name }}</h2>
+    <p>Update the doctor's information and availability below.</p>
+</div>
+
+<div class="form-container">
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+                <p class="field-error">{{ field.errors|join:", " }}</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary" style="width:100%; padding: 0.7rem;">Save Changes</button>
+    </form>
+    <p><a href="{% url 'admin_doctor_list' %}">&larr; Back to Doctor List</a></p>
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'appointments/base.html' %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Cancel Appointment</h2>
+    <p>Are you sure you want to cancel this appointment?</p>
+</div>
+
+<div class="appointment-card">
+    <div class="appointment-header">
+        <h3>Dr. {{ appointment.doctor.name }}</h3>
+        <span class="specialisation">{{ appointment.doctor.specialisation }}</span>
+    </div>
+    <div class="appointment-details">
+        <p><strong>Date:</strong> {{ appointment.date }}</p>
+        <p><strong>Time:</strong> {{ appointment.time }}</p>
+        <p><strong>Reason:</strong> {{ appointment.reason }}</p>
+    </div>
+</div>
+
+<div class="confirm-actions">
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn-cancel">Yes, Cancel Appointment</button>
+        <a href="{% url 'my_appointments' %}" class="btn-back">No, Go Back</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'appointments/base.html' %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Available Doctors</h2>
+    <p>Select a doctor to view their profile and book a consultation.</p>
+</div>
+
+<div class="doctor-grid">
+    {% for doctor in doctors %}
+    <div class="doctor-card">
+        <h3>Dr. {{ doctor.name }}</h3>
+        <p class="specialisation">{{ doctor.specialisation }}</p>
+        <p class="contact">{{ doctor.email }}</p>
+        <p class="contact">{{ doctor.phone }}</p>
+        <div class="doctor-card-actions">
+            <a href="{% url 'doctor_detail' doctor.id %}" class="btn btn-secondary">View Profile</a>
+            <a href="{% url 'book_appointment' doctor.id %}" class="btn btn-primary">Book</a>
+        </div>
+    </div>
+    {% empty %}
+    <p>No doctors are currently available.</p>
+    {% endfor %}
+</div>
+{% endblock %}

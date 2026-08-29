@@ -1,0 +1,27 @@
+{% extends 'appointments/base.html' %}
+
+{% block content %}
+<div class="hero">
+    <h1>Welcome to TeleMed</h1>
+    <p>Book doctor consultations from anywhere, at any time.</p>
+    <div class="hero-buttons">
+        <a href="/register/" class="btn btn-primary">Get Started</a>
+        <a href="/login/" class="btn btn-secondary">Login</a>
+    </div>
+</div>
+
+<div class="features">
+    <div class="feature-card">
+        <h3>Book Online</h3>
+        <p>Schedule appointments without leaving your home.</p>
+    </div>
+    <div class="feature-card">
+        <h3>Choose Your Doctor</h3>
+        <p>Browse available doctors and select the right specialist.</p>
+    </div>
+    <div class="feature-card">
+        <h3>Manage Appointments</h3>
+        <p>View and track all your bookings in one place.</p>
+    </div>
+</div>
+{% endblock %}

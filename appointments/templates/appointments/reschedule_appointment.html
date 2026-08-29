@@ -1,0 +1,32 @@
+{% extends 'appointments/base.html' %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Reschedule Appointment</h2>
+    <p>Choose a new date and time for your appointment with Dr. {{ appointment.doctor.name }}.</p>
+</div>
+
+<div class="appointment-card" style="margin-bottom: 1.5rem;">
+    <div class="appointment-details">
+        <p><strong>Current Date:</strong> {{ appointment.date }}</p>
+        <p><strong>Current Time:</strong> {{ appointment.time }}</p>
+        <p><strong>Reason:</strong> {{ appointment.reason }}</p>
+    </div>
+</div>
+
+<div class="form-container">
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="date">New Date</label>
+            <input type="date" id="date" name="date" min="{{ today|date:'Y-m-d' }}" value="{{ appointment.date }}" required>
+        </div>
+        <div class="form-group">
+            <label for="time">New Time</label>
+            <input type="time" id="time" name="time" value="{{ appointment.time }}" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%; padding:0.7rem;">Confirm Reschedule</button>
+    </form>
+    <p><a href="{% url 'my_appointments' %}">&larr; Back to My Appointments</a></p>
+</div>
+{% endblock %}

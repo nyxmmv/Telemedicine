@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telemedicine Appointment System</title>
+    <link rel="stylesheet" href="/static/appointments/style.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="nav-brand">TeleMed</a>
+            <div class="nav-links">
+                {% if user.is_authenticated %}
+                    {% if user.is_superuser %}
+                        <a href="{% url 'admin_dashboard' %}">Dashboard</a>
+                        <a href="{% url 'admin_doctor_list' %}">Manage Doctors</a>
+                        <a href="{% url 'admin_appointment_list' %}">Manage Appointments</a>
+                    {% else %}
+                        <a href="{% url 'doctor_list' %}">Doctors</a>
+                        <a href="{% url 'my_appointments' %}">My Appointments</a>
+                    {% endif %}
+                    <a href="{% url 'logout' %}">Logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}">Login</a>
+                    <a href="{% url 'register' %}">Register</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    <main>
+        <div class="container">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="message">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+</body>
+</html>

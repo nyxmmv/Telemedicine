@@ -1,0 +1,56 @@
+{% extends 'appointments/base.html' %}
+
+{% block content %}
+<div class="dashboard">
+    <div class="admin-list-header">
+        <div>
+            <h1>All Doctors</h1>
+            <a href="{% url 'admin_dashboard' %}" class="back-link">&larr; Back to Dashboard</a>
+        </div>
+        <a href="{% url 'add_doctor' %}" class="btn-add">+ Add Doctor</a>
+    </div>
+
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Specialisation</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Available</th>
+                <th colspan="2">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for doctor in doctors %}
+            <tr>
+                <td>{{ doctor.name }}</td>
+                <td>{{ doctor.specialisation }}</td>
+                <td>{{ doctor.email }}</td>
+                <td>{{ doctor.phone }}</td>
+                <td>{{ doctor.available|yesno:"Yes,No" }}</td>
+                <td><a href="{% url 'edit_doctor' doctor.id %}" class="btn-edit-inline">Edit</a></td>
+                <td><a href="{% url 'delete_doctor' doctor.id %}" class="btn-delete-inline">Remove</a></td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7">No doctors registered yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    {% if doctors.has_other_pages %}
+    <div class="pagination">
+        {% if doctors.has_previous %}
+            <a href="?page={{ doctors.previous_page_number }}">&laquo; Prev</a>
+        {% endif %}
+        <span>Page {{ doctors.number }} of {{ doctors.paginator.num_pages }}</span>
+        {% if doctors.has_next %}
+            <a href="?page={{ doctors.next_page_number }}">Next &raquo;</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

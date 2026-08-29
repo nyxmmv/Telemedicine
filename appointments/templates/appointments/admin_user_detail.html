@@ -1,0 +1,52 @@
+{% extends 'appointments/base.html' %}
+
+{% block content %}
+<div class="dashboard">
+    <a href="{% url 'admin_user_list' %}" class="back-link">&larr; Back to Users</a>
+
+    <div class="page-header" style="margin-top: 1rem;">
+        <h2>{{ profile_user.username }}</h2>
+        <p>Member since {{ profile_user.date_joined|date:"d M Y" }}</p>
+    </div>
+
+    <div class="appointment-card" style="margin-bottom: 1.5rem;">
+        <div class="appointment-details">
+            <p><strong>Username:</strong> {{ profile_user.username }}</p>
+            <p><strong>Email:</strong> {{ profile_user.email|default:"Not provided" }}</p>
+            <p><strong>Date Joined:</strong> {{ profile_user.date_joined|date:"d M Y" }}</p>
+            <p><strong>Last Login:</strong> {{ profile_user.last_login|date:"d M Y H:i"|default:"Never" }}</p>
+        </div>
+    </div>
+
+    <h2 class="section-title">Appointments ({{ appointments.count }})</h2>
+
+    {% if appointments %}
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Doctor</th>
+                <th>Specialisation</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Reason</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for appt in appointments %}
+            <tr>
+                <td>Dr. {{ appt.doctor.name }}</td>
+                <td>{{ appt.doctor.specialisation }}</td>
+                <td>{{ appt.date }}</td>
+                <td>{{ appt.time }}</td>
+                <td>{{ appt.reason }}</td>
+                <td><span class="badge badge-{{ appt.status }}">{{ appt.get_status_display }}</span></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>This user has no appointments.</p>
+    {% endif %}
+</div>
+{% endblock %}

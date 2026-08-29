@@ -1,0 +1,36 @@
+{% extends 'appointments/base.html' %}
+
+{% block content %}
+<div class="page-header">
+    <h2>My Appointments</h2>
+    <p>All your booked consultations appear here.</p>
+</div>
+
+<div class="appointments-list">
+    {% for appointment in appointments %}
+    <div class="appointment-card">
+        <div class="appointment-header">
+            <h3>Dr. {{ appointment.doctor.name }}</h3>
+            <div class="header-right">
+                <span class="specialisation">{{ appointment.doctor.specialisation }}</span>
+                <span class="badge badge-{{ appointment.status }}">{{ appointment.get_status_display }}</span>
+            </div>
+        </div>
+        <div class="appointment-details">
+            <p><strong>Date:</strong> {{ appointment.date }}</p>
+            <p><strong>Time:</strong> {{ appointment.time }}</p>
+            <p><strong>Reason:</strong> {{ appointment.reason }}</p>
+            <p><strong>Booked on:</strong> {{ appointment.booked_at|date:"d M Y" }}</p>
+        </div>
+        <div class="appointment-actions">
+            {% if appointment.status != 'cancelled' %}
+                <a href="{% url 'reschedule_appointment' appointment.id %}" class="btn btn-secondary">Reschedule</a>
+            {% endif %}
+            <a href="{% url 'cancel_appointment' appointment.id %}" class="btn-cancel">Cancel</a>
+        </div>
+    </div>
+    {% empty %}
+    <p>You have no appointments yet. <a href="{% url 'doctor_list' %}">Book one now.</a></p>
+    {% endfor %}
+</div>
+{% endblock %}

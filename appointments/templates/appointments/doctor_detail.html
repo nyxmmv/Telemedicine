@@ -1,0 +1,22 @@
+{% extends 'appointments/base.html' %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Dr. {{ doctor.name }}</h2>
+    <p>{{ doctor.specialisation }}</p>
+</div>
+
+<div class="appointment-card">
+    <div class="appointment-details">
+        <p><strong>Specialisation:</strong> {{ doctor.specialisation }}</p>
+        <p><strong>Email:</strong> {{ doctor.email }}</p>
+        <p><strong>Phone:</strong> {{ doctor.phone }}</p>
+        <p><strong>Currently Available:</strong> {{ doctor.available|yesno:"Yes,No" }}</p>
+    </div>
+</div>
+
+<div class="confirm-actions" style="margin-top: 1.5rem;">
+    <a href="{% url 'book_appointment' doctor.id %}" class="btn btn-primary">Book Appointment</a>
+    <a href="{% url 'doctor_list' %}" class="btn-back">Back to Doctors</a>
+</div>
+{% endblock %}
