@@ -8,7 +8,9 @@ from .models import Doctor, Appointment
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.paginator import Paginator
 from django.db.models import Q, Count
+from django.db.models.deletion import ProtectedError
 from django import forms
+from django.views.decorators.http import require_POST
 import datetime
 from functools import wraps
 
@@ -82,7 +84,7 @@ def doctor_detail(request, doctor_id):
 @login_required
 @patient_only
 def book_appointment(request, doctor_id):
-    doctor = get_object_or_404(Doctor, id=doctor_id)
+    doctor = get_object_or_404(Doctor, id=doctor_id, available=True)
     today = datetime.date.today()
     if request.method == 'POST':
         date_str = request.POST['date']
@@ -132,6 +134,9 @@ def my_appointments(request):
 @patient_only
 def cancel_appointment(request, appointment_id):
     appointment = get_object_or_404(Appointment, id=appointment_id, patient=request.user)
+    if appointment.status == 'cancelled':
+        messages.info(request, 'This appointment has already been cancelled.')
+        return redirect('my_appointments')
     if request.method == 'POST':
         appointment.status = 'cancelled'
         appointment.save()
@@ -240,6 +245,7 @@ def admin_appointment_list(request):
 
 @login_required
 @user_passes_test(is_admin)
+@require_POST
 def admin_update_appointment_status(request, appointment_id):
     appointment = get_object_or_404(Appointment, id=appointment_id)
     if request.method == 'POST':
@@ -248,6 +254,8 @@ def admin_update_appointment_status(request, appointment_id):
             appointment.status = new_status
             appointment.save()
             messages.success(request, f'Appointment status updated to {new_status}.')
+        else:
+            messages.error(request, 'Invalid appointment status.')
     return redirect('admin_appointment_list')
 
 @login_required
@@ -258,7 +266,7 @@ def delete_appointment(request, appointment_id):
         appointment.delete()
         messages.success(request, 'Appointment deleted successfully.')
         return redirect('admin_appointment_list')
-    return render(request, 'appointments/confirm_delete.html', {'appointment': appointment})
+    return render(request, 'appointments/admin_confirm_delete_appointment.html', {'appointment': appointment})
 
 @login_required
 @user_passes_test(is_admin)
@@ -278,8 +286,14 @@ def add_doctor(request):
 def delete_doctor(request, doctor_id):
     doctor = get_object_or_404(Doctor, id=doctor_id)
     if request.method == 'POST':
-        doctor.delete()
-        messages.success(request, 'Doctor removed successfully.')
+        try:
+            doctor.delete()
+            messages.success(request, 'Doctor removed successfully.')
+        except ProtectedError:
+            messages.error(
+                request,
+                'This doctor cannot be removed because appointment records depend on the profile. Mark the doctor as unavailable instead.'
+            )
         return redirect('admin_doctor_list')
     return render(request, 'appointments/confirm_delete_doctor.html', {'doctor': doctor})
 

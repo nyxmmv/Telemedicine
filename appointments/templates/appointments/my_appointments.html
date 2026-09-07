@@ -25,8 +25,8 @@
         <div class="appointment-actions">
             {% if appointment.status != 'cancelled' %}
                 <a href="{% url 'reschedule_appointment' appointment.id %}" class="btn btn-secondary">Reschedule</a>
+                <a href="{% url 'cancel_appointment' appointment.id %}" class="btn-cancel">Cancel</a>
             {% endif %}
-            <a href="{% url 'cancel_appointment' appointment.id %}" class="btn-cancel">Cancel</a>
         </div>
     </div>
     {% empty %}

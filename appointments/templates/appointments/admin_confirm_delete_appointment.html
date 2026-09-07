@@ -1,0 +1,29 @@
+{% extends 'appointments/base.html' %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Delete Appointment Record</h2>
+    <p>Are you sure you want to permanently delete this appointment record? This action cannot be undone.</p>
+</div>
+
+<div class="appointment-card">
+    <div class="appointment-header">
+        <h3>{{ appointment.patient.username }}</h3>
+        <span class="specialisation">Dr. {{ appointment.doctor.name }}</span>
+    </div>
+    <div class="appointment-details">
+        <p><strong>Date:</strong> {{ appointment.date }}</p>
+        <p><strong>Time:</strong> {{ appointment.time }}</p>
+        <p><strong>Reason:</strong> {{ appointment.reason }}</p>
+        <p><strong>Status:</strong> {{ appointment.get_status_display }}</p>
+    </div>
+</div>
+
+<div class="confirm-actions">
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn-cancel">Yes, Delete Record</button>
+        <a href="{% url 'admin_appointment_list' %}" class="btn-back">No, Go Back</a>
+    </form>
+</div>
+{% endblock %}
